@@ -1,13 +1,16 @@
 package com.company.employeemanagement.service;
 
-import com.company.employeemanagement.dto.ReqRes;
-import com.company.employeemanagement.entity.OurUsers;
+import com.company.employeemanagement.payload.GoogleTokenVerificationResponse;
+import com.company.employeemanagement.payload.ReqRes;
+import com.company.employeemanagement.model.OurUsers;
 import com.company.employeemanagement.repository.UsersRepo;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.web.client.RestTemplate;
 
 import java.util.HashMap;
 import java.util.List;
@@ -54,7 +57,20 @@ public class UsersManagementService {
         return resp;
     }
 
-    public ReqRes login(ReqRes loginRequest){
+
+
+    public ReqRes googleLogin(ReqRes loginRequest){
+
+        String googleAuthUrl = "https://oauth2.googleapis.com/tokeninfo?id_token=" + loginRequest.getToken();
+
+        RestTemplate rest = new RestTemplate();
+
+        ResponseEntity<GoogleTokenVerificationResponse> googleResponse = rest.getForEntity(googleAuthUrl, GoogleTokenVerificationResponse.class);
+
+
+        usersRepo.findByEmail(googleResponse.getBody().getEmail());
+
+
         ReqRes response = new ReqRes();
         try {
             authenticationManager
@@ -76,6 +92,9 @@ public class UsersManagementService {
         }
         return response;
     }
+
+
+
 
     public ReqRes refreshToken(ReqRes refreshTokenRequest){
         ReqRes response = new ReqRes();

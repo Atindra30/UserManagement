@@ -1,13 +1,22 @@
 import axios from "axios";
 
 class UserService{
-    static BASE_URL = "http://localhost:8080"
+    static BASE_URL = "http://localhost:8081"
 
     static async login(email, password){
         try{
             const response = await axios.post(`${UserService.BASE_URL}/auth/login`, {email, password})
             return response.data;
 
+        }catch(err){
+            throw err;
+        }
+    }
+
+    static async signup(userData){
+        try{
+            const response = await axios.post(`${UserService.BASE_URL}/auth/signup`, userData)
+            return response.data;
         }catch(err){
             throw err;
         }
@@ -20,6 +29,16 @@ class UserService{
                 headers: {Authorization: `Bearer ${token}`}
             })
             return response.data;
+        }catch(err){
+            throw err;
+        }
+    }
+
+    static async googleAuth(idToken){
+        try{
+            const response = await axios.post(`${UserService.BASE_URL}/auth/googleAuth`, {idToken})
+            return response.data;
+
         }catch(err){
             throw err;
         }
@@ -89,12 +108,13 @@ class UserService{
 
     /**AUTHENTICATION CHECKER */
     static logout(){
-        localStorage.removeItem('token')
+        localStorage.removeItem('accessToken')
+        localStorage.removeItem('refreshToken')
         localStorage.removeItem('role')
     }
 
     static isAuthenticated(){
-        const token = localStorage.getItem('token')
+        const token = localStorage.getItem('accessToken')
         return !!token
     }
 

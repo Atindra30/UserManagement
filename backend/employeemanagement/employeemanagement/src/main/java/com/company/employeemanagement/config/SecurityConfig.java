@@ -1,6 +1,9 @@
 package com.company.employeemanagement.config;
 
 
+import com.company.employeemanagement.security.CustomUserDetailsService;
+import com.company.employeemanagement.security.JWTAuthFilter;
+import com.company.employeemanagement.security.TokenAuthenticationFilter;
 import com.company.employeemanagement.service.OurUserDetailsService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
@@ -23,12 +26,11 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 @EnableWebSecurity
 public class SecurityConfig {
 
+    @Autowired
+    private CustomUserDetailsService customUserDetailsService;
 
     @Autowired
-    private OurUserDetailsService ourUserDetailsService;
-
-    @Autowired
-    private JWTAuthFilter jwtAuthFilter;
+    private TokenAuthenticationFilter tokenAuthenticationFilter;
 
 
     @Bean
@@ -42,7 +44,7 @@ public class SecurityConfig {
                         .anyRequest().authenticated())
                 .sessionManagement(manager->manager.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authenticationProvider(authenticationProvider()).addFilterBefore(
-                        jwtAuthFilter, UsernamePasswordAuthenticationFilter.class
+                        tokenAuthenticationFilter, UsernamePasswordAuthenticationFilter.class
                 );
         return httpSecurity.build();
     }
@@ -52,7 +54,7 @@ public class SecurityConfig {
     public AuthenticationProvider authenticationProvider() {
 
         DaoAuthenticationProvider daoAuthenticationProvider = new DaoAuthenticationProvider();
-        daoAuthenticationProvider.setUserDetailsService(ourUserDetailsService);
+        daoAuthenticationProvider.setUserDetailsService(customUserDetailsService);
         daoAuthenticationProvider.setPasswordEncoder(passwordEncoder());
         return daoAuthenticationProvider;
     }

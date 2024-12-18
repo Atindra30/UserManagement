@@ -1,7 +1,7 @@
 package com.company.employeemanagement.controller;
 
-import com.company.employeemanagement.dto.ReqRes;
-import com.company.employeemanagement.entity.OurUsers;
+import com.company.employeemanagement.payload.ReqRes;
+import com.company.employeemanagement.model.OurUsers;
 import com.company.employeemanagement.service.UsersManagementService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -19,10 +19,7 @@ public class UserManagementController {
         return ResponseEntity.ok(usersManagementService.register(reg));
     }
 
-    @PostMapping("/auth/login")
-    public ResponseEntity<ReqRes> login(@RequestBody ReqRes req) {
-        return ResponseEntity.ok(usersManagementService.login(req));
-    }
+
 
     @PostMapping("/auth/refresh")
     public ResponseEntity<ReqRes> refreshToken(@RequestBody ReqRes req) {

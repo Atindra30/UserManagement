@@ -1,6 +1,6 @@
-package com.company.employeemanagement.dto;
+package com.company.employeemanagement.payload;
 
-import com.company.employeemanagement.entity.OurUsers;
+import com.company.employeemanagement.model.OurUsers;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.Data;
@@ -25,10 +25,6 @@ public class ReqRes {
     private String password;
     private OurUsers ourUsers;
     private List<OurUsers> ourUsersList;
-
-
-
-
 
 
 

@@ -1,4 +1,4 @@
-package com.company.employeemanagement.entity;
+package com.company.employeemanagement.model;
 
 
 import jakarta.persistence.*;

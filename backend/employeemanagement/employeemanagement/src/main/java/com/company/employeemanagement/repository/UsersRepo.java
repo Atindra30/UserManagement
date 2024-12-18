@@ -1,6 +1,6 @@
 package com.company.employeemanagement.repository;
 
-import com.company.employeemanagement.entity.OurUsers;
+import com.company.employeemanagement.model.OurUsers;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.Optional;

@@ -68,6 +68,7 @@ function RegistrationPage() {
                     <input type="text" name="city" value={formData.city} onChange={handleInputChange} placeholder="Enter your city" required />
                 </div>
                 <button type="submit">Register</button>
+            
             </form>
         </div>
     );

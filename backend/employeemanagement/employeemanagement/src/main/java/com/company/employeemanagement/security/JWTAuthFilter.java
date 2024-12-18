@@ -1,4 +1,4 @@
-package com.company.employeemanagement.config;
+package com.company.employeemanagement.security;
 
 import com.company.employeemanagement.service.JWTUtils;
 import com.company.employeemanagement.service.OurUserDetailsService;

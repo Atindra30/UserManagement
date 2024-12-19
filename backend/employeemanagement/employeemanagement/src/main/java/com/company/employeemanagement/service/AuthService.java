@@ -106,7 +106,7 @@ public class AuthService {
         }
 
         // Creating user's account
-        Users user = registerNewUser(signUpRequest.getName(), signUpRequest.getEmail(), passwordEncoder.encode(signUpRequest.getPassword()), null, true, AuthProviderEnum.LOCAL);
+        registerNewUser(signUpRequest.getName(), signUpRequest.getEmail(), passwordEncoder.encode(signUpRequest.getPassword()), null, true, AuthProviderEnum.LOCAL);
 
         //authenticateUser
         LoginRequestPayload loginRequest = new LoginRequestPayload();
@@ -117,55 +117,6 @@ public class AuthService {
 
         return authResponse;
     }
-
-//    public AuthResponse authenticateUserWithGoogle(LoginRequestPayload loginRequest) {
-//
-//        if(loginRequest==null || StringUtils.isBlank(loginRequest.getIdToken())) {
-//            return new AuthResponse(null, null, null, null,
-//                    "Unauthorized, Please login or sign in.", false);
-//        }
-//
-//        String googleAuthUrl = "https://oauth2.googleapis.com/tokeninfo?id_token=" + loginRequest.getIdToken();
-//
-//        ResponseEntity<GoogleIdTokenResponsePayload> googleIdTokenResponse = restTemplate.getForEntity(googleAuthUrl, GoogleIdTokenResponsePayload.class);
-//
-//        if(!googleIdTokenResponse.hasBody()) {
-//            return new AuthResponse(null, null, null, null,
-//                    "Please login using  your google sign in for access", false);
-//        }
-//
-//        GoogleIdTokenResponsePayload res = googleIdTokenResponse.getBody();
-//
-//        if(res.getEmailVerified() == null || !res.getEmailVerified().equalsIgnoreCase("true")) {
-//            return new AuthResponse(null, null, null, null,
-//                    "Your google email is not verified, please verify before proceeding", false);
-//        }
-//
-//        Optional<Users> userOptional = userRepository.findByEmailAndProvider(res.getEmail(), AuthProviderEnum.GOOGLE);
-//        Users user = null;
-//
-//        if(!userOptional.isPresent()) {
-//            Users local = userRepository.findByEmailAndProvider(res.getEmail(), AuthProviderEnum.LOCAL).orElse(null);
-//            if(local != null) {
-//                return new AuthResponse(null, null, null, null,
-//                        "You have created account using email and password, you cant use google as login method.", false);
-//            }
-//            user = registerNewUser(res);
-//
-//        } else {
-//            user = userOptional.get();
-//            updateExistingUser(user, res);
-//        }
-//
-//        UserPrincipal principal = UserPrincipal.create(user);
-//        String accessToken = tokenProvider.createAccessToken(principal);
-//        String refreshToken = tokenProvider.createRefreshToken(principal);
-//        long accessTokenExpiry = tokenProvider.getAccessTokenExpirationTime(accessToken).getTime()
-//                - tokenProvider.getAccessTokenIssuedTime(accessToken).getTime();
-//        return new AuthResponse(accessToken, accessTokenExpiry, refreshToken,
-//                TokenTypeEnum.Bearer, "Access token generated successfully!", true);
-//    }
-
 
     public AuthResponse authenticateUserWithGoogle(LoginRequestPayload loginRequest) {
 

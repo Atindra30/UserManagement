@@ -16,16 +16,17 @@ function LoginPage() {
     try {
       const authData = await UserService.login(email, password);
       console.log(authData);
-      toast.success("User logged in Successfully", {
-        position: "top-center",
-      });
       if (authData.accessToken) {
         localStorage.setItem("accessToken", authData.accessToken);
         localStorage.setItem("refreshToken", authData.refreshToken);
         localStorage.setItem("role", "ADMIN");
+        //for notification
+        toast.success("User logged in Successfully", {
+          position: "bottom-right",
+        });
         navigate("/profile");
       } else {
-        setError(authData.message);
+        throw new Error(authData.message || "Login failed");
       }
     } catch (error) {
       console.log(error);

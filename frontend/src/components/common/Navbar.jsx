@@ -1,6 +1,5 @@
 import React from "react";
-import { Link, useNavigate} from "react-router-dom";
-
+import { Link, useNavigate } from "react-router-dom";
 import UserService from "../service/UserService";
 
 function Navbar() {
@@ -9,25 +8,23 @@ function Navbar() {
   const isAdmin = UserService.isAdmin();
 
   const handleLogout = () => {
-    const confirmDelete = window.confirm(
-      "Are you sure you want to logout this user?"
+    const confirmLogout = window.confirm(
+      "Are you sure you want to logout?"
     );
-    if (confirmDelete) {
+    if (confirmLogout) {
       UserService.logout();
-      navigate("/login")
+      navigate("/login");
     }
   };
 
   return (
-    <nav className="bg-gray-200 text-gray-800 shadow-lg">
+    <nav className="bg-gray-800 text-gray-200 shadow-md">
       <div className="container mx-auto flex justify-between items-center px-6 py-4">
-        {/* Logo or Brand */}
-        <div className="text-xl font-bold">
-          {!isAuthenticated && (
-            <Link to="/" className="hover:text-gray-600">
-              Atindra Development Org.
-            </Link>
-          )}
+        {/* Logo/Brand */}
+        <div className="text-2xl font-bold">
+          <Link to="/" className="text-gray-100 hover:text-blue-400 transition duration-200">
+            Atindra Development
+          </Link>
         </div>
 
         {/* Navigation Links */}
@@ -36,7 +33,7 @@ function Navbar() {
             <li>
               <Link
                 to="/profile"
-                className="hover:text-gray-600 transition duration-200"
+                className="text-gray-200 hover:text-blue-400 font-semibold transition duration-200"
               >
                 Profile
               </Link>
@@ -46,7 +43,7 @@ function Navbar() {
             <li>
               <Link
                 to="/admin/user-management"
-                className="hover:text-gray-600 transition duration-200"
+                className="text-gray-200 hover:text-blue-400 font-semibold transition duration-200"
               >
                 User Management
               </Link>
@@ -56,7 +53,7 @@ function Navbar() {
             <li>
               <button
                 onClick={handleLogout}
-                className="hover:text-gray-600 transition duration-200 focus:outline-none"
+                className="text-gray-200 hover:text-red-400 font-semibold transition duration-200 focus:outline-none"
               >
                 Logout
               </button>

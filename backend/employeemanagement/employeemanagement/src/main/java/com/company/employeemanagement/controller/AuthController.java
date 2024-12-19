@@ -1,5 +1,6 @@
 package com.company.employeemanagement.controller;
 
+import com.company.employeemanagement.enums.UserRoleEnum;
 import com.company.employeemanagement.payload.AuthResponse;
 import com.company.employeemanagement.payload.LoginRequestPayload;
 import com.company.employeemanagement.payload.SignUpRequestPayload;
@@ -23,7 +24,8 @@ public class AuthController {
     private AuthService authService;
 
     @PostMapping("/signup")
-    public ResponseEntity<?> registerUser(@Valid @RequestBody SignUpRequestPayload signUpRequest) {
+    public ResponseEntity<?> signupUser(@Valid @RequestBody SignUpRequestPayload signUpRequest) {
+        signUpRequest.setRole(UserRoleEnum.USER);
         AuthResponse authResponse = authService.registerUser(signUpRequest);
         return ResponseEntity.ok(authResponse);
     }

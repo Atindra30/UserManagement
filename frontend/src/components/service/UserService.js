@@ -24,7 +24,7 @@ class UserService{
 
     static async register(userData, token){
         try{
-            const response = await axios.post(`${UserService.BASE_URL}/auth/register`, userData, 
+            const response = await axios.post(`${UserService.BASE_URL}/admin/register`, userData, 
             {
                 headers: {Authorization: `Bearer ${token}`}
             })
@@ -46,7 +46,7 @@ class UserService{
 
     static async getAllUsers(token){
         try{
-            const response = await axios.get(`${UserService.BASE_URL}/admin/get-all-users`, 
+            const response = await axios.get(`${UserService.BASE_URL}/admin/allUsers`, 
             {
                 headers: {Authorization: `Bearer ${token}`}
             })
@@ -59,7 +59,7 @@ class UserService{
 
     static async getYourProfile(token){
         try{
-            const response = await axios.get(`${UserService.BASE_URL}/adminuser/get-profile`, 
+            const response = await axios.get(`${UserService.BASE_URL}/user/getProfile`, 
             {
                 headers: {Authorization: `Bearer ${token}`}
             })
@@ -71,7 +71,7 @@ class UserService{
 
     static async getUserById(userId, token){
         try{
-            const response = await axios.get(`${UserService.BASE_URL}/admin/get-users/${userId}`, 
+            const response = await axios.get(`${UserService.BASE_URL}/admin/getProfile/${userId}`, 
             {
                 headers: {Authorization: `Bearer ${token}`}
             })

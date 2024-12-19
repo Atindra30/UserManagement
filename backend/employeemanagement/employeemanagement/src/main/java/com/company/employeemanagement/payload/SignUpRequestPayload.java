@@ -1,5 +1,6 @@
 package com.company.employeemanagement.payload;
 
+import com.company.employeemanagement.enums.UserRoleEnum;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import lombok.Data;
@@ -19,5 +20,7 @@ public class SignUpRequestPayload {
 
 //    @NotBlank
     private String token;
+
+    private UserRoleEnum role;
 
 }

@@ -4,7 +4,7 @@ import UserService from "../service/UserService";
 import { toast } from "react-toastify";
 import GoogleAuth from "./GoogleAuth";
 
-function SignUpPage() {
+function SignUpPage({refreshApp}) {
   const navigate = useNavigate();
 
   const [formData, setFormData] = useState({
@@ -28,13 +28,22 @@ function SignUpPage() {
       if (authData.success) {
         localStorage.setItem("accessToken", authData.accessToken);
         localStorage.setItem("refreshToken", authData.refreshToken);
-        localStorage.setItem("role", "ADMIN");
+        const profileData = await UserService.getYourProfile(authData.accessToken);
+        if(profileData.data){
+          localStorage.setItem("role", profileData.data.role?profileData.data.role:"USER");
+        }else{
+          localStorage.setItem("role", "USER");
+
+        }
+        refreshApp();
+    
         // Clear the form fields after successful registration
         setFormData({
             name: "",
             email: "",
             password: "",
         });
+
         toast.success("User signed up successfully!", {
             position: "top-center",
           });
@@ -139,7 +148,7 @@ function SignUpPage() {
             </p>
             </div>
           <div className="mt-4">
-            <GoogleAuth buttonText="Sign up with Google" />
+            <GoogleAuth buttonText="Sign up with Google" refreshApp={refreshApp} />
           </div>
           
         </form>

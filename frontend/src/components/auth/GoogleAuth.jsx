@@ -6,7 +6,7 @@ import { useNavigate } from "react-router-dom";
 import UserService from "../service/UserService";
 import React, { useState } from "react";
 
-function SignInwithGoogle({ buttonText = "Sign in with Google" }) {
+function SignInwithGoogle({ buttonText = "Sign in with Google", refreshApp }) {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [idToken, setIdToken] = useState("");
@@ -26,13 +26,19 @@ function SignInwithGoogle({ buttonText = "Sign in with Google" }) {
           result._tokenResponse.oauthAccessToken
         );
         console.log(authData);
-        toast.success("User logged in Successfully", {
-          position: "top-center",
-        });
         if (authData.accessToken) {
           localStorage.setItem("accessToken", authData.accessToken);
           localStorage.setItem("refreshToken", authData.refreshToken);
-          localStorage.setItem("role", "ADMIN");
+          const profileData = await UserService.getYourProfile(authData.accessToken);
+          if(profileData.data){
+            localStorage.setItem("role", profileData.data.role?profileData.data.role:"USER");
+          }else{
+            localStorage.setItem("role", "USER");
+          }
+          refreshApp();
+          toast.success("User logged in Successfully", {
+            position: "top-center",
+          });
           navigate("/profile");
         }
 

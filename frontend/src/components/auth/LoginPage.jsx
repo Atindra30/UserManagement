@@ -4,7 +4,7 @@ import UserService from "../service/UserService";
 import { toast } from "react-toastify";
 import GoogleAuth from "./GoogleAuth";
 
-function LoginPage() {
+function LoginPage({ refreshApp }) {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
@@ -19,7 +19,14 @@ function LoginPage() {
       if (authData.accessToken) {
         localStorage.setItem("accessToken", authData.accessToken);
         localStorage.setItem("refreshToken", authData.refreshToken);
-        localStorage.setItem("role", "ADMIN");
+        const profileData = await UserService.getYourProfile(authData.accessToken);
+        if(profileData.data){
+          localStorage.setItem("role", profileData.data.role?profileData.data.role:"USER");
+        }else{
+          localStorage.setItem("role", "USER");
+
+        }
+        refreshApp();
         //for notification
         toast.success("User logged in Successfully", {
           position: "bottom-right",
@@ -100,7 +107,7 @@ function LoginPage() {
             </p>
           </div>
           <div className="mt-6">
-            <GoogleAuth buttonText="Sign in with Google" />
+            <GoogleAuth buttonText="Sign in with Google" refreshApp={refreshApp}/>
           </div>
         </form>
       </div>

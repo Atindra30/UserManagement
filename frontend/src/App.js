@@ -1,4 +1,3 @@
-// App.js
 import React from 'react';
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import Navbar from './components/common/Navbar';
@@ -13,7 +12,12 @@ import "react-toastify/dist/ReactToastify.css";
 import SignUpPage from './components/auth/SignupPage';
 import FooterComponent from './components/common/Footer';
 
-function App() {
+function App({ refreshApp }) {
+
+  const isAdmin = () => {
+    const role = localStorage.getItem("role");
+    return role === "ADMIN";
+  };
 
   return (
     <BrowserRouter>
@@ -21,24 +25,20 @@ function App() {
         <Navbar />
         <div className="content">
           <Routes>
-            <Route exact path="/" element={<LoginPage />} />
-            <Route exact path="/login" element={<LoginPage />} />
-            <Route path="/signup" element={<SignUpPage />} />
+            <Route exact path="/" element={<LoginPage refreshApp={refreshApp} />} />
+            <Route exact path="/login" element={<LoginPage refreshApp={refreshApp} />} />
+            <Route path="/signup" element={<SignUpPage refreshApp={refreshApp} />} />
             <Route path="/profile" element={<ProfilePage />} />
-            
-                
-            
 
             {/* Check if user is authenticated and admin before rendering admin-only routes */}
-            {UserService.adminOnly() && (
+            {isAdmin() && (
               <>
                 <Route path="/register" element={<RegistrationPage />} />
-                
                 <Route path="/admin/user-management" element={<UserManagementPage />} />
                 <Route path="/update-user/:userId" element={<UpdateUser />} />
               </>
             )}
-            <Route path="*" element={<Navigate to="/login" />} />‰
+            <Route path="*" element={<Navigate to="/login" />} />
           </Routes>
           <ToastContainer />
         </div>

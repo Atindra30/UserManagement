@@ -138,7 +138,7 @@ function SignUpPage({refreshApp}) {
           {/* Bottom-right corner link */}
             <div className="mt-4 flex justify-end">
             <p className="text-sm text-gray-600">
-                Already registered ?{" "}
+                Already registered {" "}
                 <span
                 className="text-blue-500 underline hover:underline cursor-pointer"
                 onClick={() => navigate("/login")}

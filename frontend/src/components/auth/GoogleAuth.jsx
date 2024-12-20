@@ -64,7 +64,7 @@ function SignInwithGoogle({ buttonText = "Sign in with Google", refreshApp }) {
 
   return (
     <div className="mt-4">
-      <p className="text-center text-gray-600 mb-4">-- Or continue with --</p>
+      <p className="text-center text-gray-600 mb-4">------------- Or continue -------------</p>
       <div
         className="flex justify-center items-center cursor-pointer bg-white border border-gray-300 rounded-md p-2 hover:shadow-md"
         onClick={googleLogin}

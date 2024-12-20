@@ -8,9 +8,7 @@ function Navbar() {
   const isAdmin = UserService.isAdmin();
 
   const handleLogout = () => {
-    const confirmLogout = window.confirm(
-      "Are you sure you want to logout?"
-    );
+    const confirmLogout = window.confirm("Are you sure you want to logout?");
     if (confirmLogout) {
       UserService.logout();
       navigate("/login");
@@ -28,12 +26,12 @@ function Navbar() {
         </div>
 
         {/* Navigation Links */}
-        <ul className="flex space-x-6">
+        <ul className="flex items-center space-x-6">
           {isAuthenticated && (
             <li>
               <Link
                 to="/profile"
-                className="text-gray-200 hover:text-blue-400 font-semibold transition duration-200"
+                className="flex items-center justify-center px-6 py-2 h-12 rounded-md bg-gray-700 hover:bg-blue-500 transition duration-200 font-semibold"
               >
                 Profile
               </Link>
@@ -43,7 +41,7 @@ function Navbar() {
             <li>
               <Link
                 to="/admin/user-management"
-                className="text-gray-200 hover:text-blue-400 font-semibold transition duration-200"
+                className="flex items-center justify-center px-6 py-2 h-12 rounded-md bg-gray-700 hover:bg-blue-500 transition duration-200 font-semibold"
               >
                 User Management
               </Link>
@@ -53,7 +51,7 @@ function Navbar() {
             <li>
               <button
                 onClick={handleLogout}
-                className="text-gray-200 hover:text-red-400 font-semibold transition duration-200 focus:outline-none"
+                className="flex items-center justify-center px-6 py-2 h-12 rounded-md bg-gray-700 hover:bg-red-500 transition duration-200 font-semibold focus:outline-none"
               >
                 Logout
               </button>

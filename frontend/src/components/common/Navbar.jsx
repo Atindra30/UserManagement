@@ -1,15 +1,20 @@
 import React from "react";
+import { useAuth } from "../../context/AuthContext";
 import { Link, useNavigate } from "react-router-dom";
 import UserService from "../service/UserService";
 
+
+
 function Navbar() {
+  const { authState, logout } = useAuth();
+
   const navigate = useNavigate();
   const isAuthenticated = UserService.isAuthenticated();
   const isAdmin = UserService.isAdmin();
 
   const handleLogout = () => {
-    const confirmLogout = window.confirm("Are you sure you want to logout?");
-    if (confirmLogout) {
+    if (window.confirm("Are you sure you want to logout?")) {
+      logout();
       UserService.logout();
       navigate("/login");
     }
@@ -27,7 +32,7 @@ function Navbar() {
 
         {/* Navigation Links */}
         <ul className="flex items-center space-x-6">
-          {isAuthenticated && (
+          {authState.isAuthenticated && (
             <li>
               <Link
                 to="/profile"
@@ -37,7 +42,7 @@ function Navbar() {
               </Link>
             </li>
           )}
-          {isAdmin && (
+          {authState.role === "ADMIN" && (
             <li>
               <Link
                 to="/admin/user-management"
@@ -47,7 +52,7 @@ function Navbar() {
               </Link>
             </li>
           )}
-          {isAuthenticated && (
+          {authState.isAuthenticated && (
             <li>
               <button
                 onClick={handleLogout}

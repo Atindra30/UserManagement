@@ -3,12 +3,22 @@ import { useNavigate } from "react-router-dom";
 import UserService from "../service/UserService";
 import { toast } from "react-toastify";
 import GoogleAuth from "./GoogleAuth";
+import { useAuth } from "../../context/AuthContext";
 
-function LoginPage({ refreshApp }) {
+function LoginPage() {
+
+  const navigate = useNavigate();
+  const { authState, login } = useAuth();
+
+
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
-  const navigate = useNavigate();
+  const [userData, setUserData] = useState({
+    accessToken: "",
+    refreshToken: "",
+    role: "",
+  })
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -17,21 +27,27 @@ function LoginPage({ refreshApp }) {
       const authData = await UserService.login(email, password);
       console.log(authData);
       if (authData.accessToken) {
+        
+        const profileData = await UserService.getYourProfile(authData.accessToken);
+        const userRole = profileData.data && profileData.data.role ? profileData.data.role : "USER";
         localStorage.setItem("accessToken", authData.accessToken);
         localStorage.setItem("refreshToken", authData.refreshToken);
-        const profileData = await UserService.getYourProfile(authData.accessToken);
-        if(profileData.data){
-          localStorage.setItem("role", profileData.data.role?profileData.data.role:"USER");
-        }else{
-          localStorage.setItem("role", "USER");
-
-        }
-        refreshApp();
+        localStorage.setItem("role", userRole);
+        setUserData({
+          accessToken: authData.accessToken,
+          refreshToken: authData.refreshToken,
+          role: userRole,
+        });
+        login({
+          accessToken: authData.accessToken,
+          refreshToken: authData.refreshToken,
+          role: userRole,
+        });
         //for notification
         toast.success("User logged in Successfully", {
           position: "bottom-right",
         });
-        navigate("/profile");
+        navigate("/profile");        
       } else {
         throw new Error(authData.message || "Login failed");
       }
@@ -107,7 +123,7 @@ function LoginPage({ refreshApp }) {
             </p>
           </div>
           <div className="mt-6">
-            <GoogleAuth buttonText="Sign in with Google" refreshApp={refreshApp}/>
+            <GoogleAuth buttonText="Sign in with Google"/>
           </div>
         </form>
       </div>

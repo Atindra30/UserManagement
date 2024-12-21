@@ -6,7 +6,7 @@ import { useNavigate } from "react-router-dom";
 import UserService from "../service/UserService";
 import React, { useState } from "react";
 
-function SignInwithGoogle({ buttonText = "Sign in with Google", refreshApp }) {
+function SignInwithGoogle({ buttonText = "Sign in with Google"}) {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [idToken, setIdToken] = useState("");
@@ -35,7 +35,7 @@ function SignInwithGoogle({ buttonText = "Sign in with Google", refreshApp }) {
           }else{
             localStorage.setItem("role", "USER");
           }
-          refreshApp();
+          
           toast.success("User logged in Successfully", {
             position: "top-center",
           });

@@ -3,8 +3,11 @@ import { useNavigate } from "react-router-dom";
 import UserService from "../service/UserService";
 import { toast } from "react-toastify";
 import GoogleAuth from "./GoogleAuth";
+import { useAuth } from "../../context/AuthContext";
 
 function SignUpPage() {
+
+  const { login } = useAuth();
   const navigate = useNavigate();
 
   const [formData, setFormData] = useState({
@@ -26,15 +29,13 @@ function SignUpPage() {
       const authData = await UserService.signup(formData);
 
       if (authData.success) {
-        localStorage.setItem("accessToken", authData.accessToken);
-        localStorage.setItem("refreshToken", authData.refreshToken);
         const profileData = await UserService.getYourProfile(authData.accessToken);
-        if(profileData.data){
-          localStorage.setItem("role", profileData.data.role?profileData.data.role:"USER");
-        }else{
-          localStorage.setItem("role", "USER");
-
-        }
+        const userRole = profileData.data && profileData.data.role ? profileData.data.role : "USER";
+        login({
+          accessToken: authData.accessToken,
+          refreshToken: authData.refreshToken,
+          role: userRole,
+        });
     
         // Clear the form fields after successful registration
         setFormData({
@@ -48,10 +49,7 @@ function SignUpPage() {
           });
         navigate("/profile");
       } else {
-        setError(authData.message);
-        setTimeout(() => {
-            setError("");
-          }, 5000);
+        throw new Error(authData.message || "sign-up failed");
       }
     } catch (error) {
       console.error("Error signing up user:", error);

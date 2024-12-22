@@ -8,17 +8,12 @@ import { useAuth } from "../../context/AuthContext";
 function LoginPage() {
 
   const navigate = useNavigate();
-  const { authState, login } = useAuth();
+  const { login } = useAuth();
 
 
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
-  const [userData, setUserData] = useState({
-    accessToken: "",
-    refreshToken: "",
-    role: "",
-  })
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -26,18 +21,9 @@ function LoginPage() {
     try {
       const authData = await UserService.login(email, password);
       console.log(authData);
-      if (authData.accessToken) {
-        
+      if (authData.success) {
         const profileData = await UserService.getYourProfile(authData.accessToken);
         const userRole = profileData.data && profileData.data.role ? profileData.data.role : "USER";
-        localStorage.setItem("accessToken", authData.accessToken);
-        localStorage.setItem("refreshToken", authData.refreshToken);
-        localStorage.setItem("role", userRole);
-        setUserData({
-          accessToken: authData.accessToken,
-          refreshToken: authData.refreshToken,
-          role: userRole,
-        });
         login({
           accessToken: authData.accessToken,
           refreshToken: authData.refreshToken,

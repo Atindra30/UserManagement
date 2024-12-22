@@ -1,8 +1,10 @@
 import React, { useState } from "react";
 import UserService from "../service/UserService";
 import { useNavigate } from "react-router-dom";
+import { useAuth } from "../../context/AuthContext";
 
 function RegistrationPage() {
+  const { authState } = useAuth();
   const navigate = useNavigate();
 
   const [formData, setFormData] = useState({
@@ -21,7 +23,7 @@ function RegistrationPage() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const token = localStorage.getItem("accessToken");
+      const token = authState.user.accessToken // Retrieve the token from localStorage
       await UserService.register(formData, token);
 
       setFormData({

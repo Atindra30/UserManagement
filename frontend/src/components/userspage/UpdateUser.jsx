@@ -1,8 +1,11 @@
 import React, { useState, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import UserService from "../service/UserService";
+import { useAuth } from "../../context/AuthContext";
 
 function UpdateUser() {
+
+  const { authState } = useAuth();
   const navigate = useNavigate();
   const { userId } = useParams();
 
@@ -19,7 +22,7 @@ function UpdateUser() {
 
   const fetchUserDataById = async (userId) => {
     try {
-      const token = localStorage.getItem("accessToken");
+      const token = authState.user.accessToken // Retrieve the token from localStorage
       const response = await UserService.getUserById(userId, token);
       const { name, email, role, provider } = response.data;
       setUserData({ name, email, role, provider });

@@ -1,63 +1,49 @@
 import { GoogleAuthProvider, signInWithPopup } from "firebase/auth";
-import { auth, db } from "../service/firebase"; // Updated import path
+import { auth } from "../service/firebase"; // Updated import path
 import { toast } from "react-toastify";
-import { setDoc, doc } from "firebase/firestore";
 import { useNavigate } from "react-router-dom";
 import UserService from "../service/UserService";
 import React, { useState } from "react";
+import { useAuth } from "../../context/AuthContext";
+
+
+
 
 function SignInwithGoogle({ buttonText = "Sign in with Google"}) {
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const [idToken, setIdToken] = useState("");
 
+  const {login} = useAuth();
   const navigate = useNavigate();
 
   async function googleLogin() {
     const provider = new GoogleAuthProvider();
-    provider.addScope("profile");
-    provider.addScope("email");
     signInWithPopup(auth, provider)
       .then(async (result) => {
         console.log(result);
         const user = result.user;
-
-        const authData = await UserService.googleAuth(
-          result._tokenResponse.oauthAccessToken
-        );
+        const authData = await UserService.googleAuth(result._tokenResponse.oauthAccessToken);
         console.log(authData);
         if (authData.accessToken) {
-          localStorage.setItem("accessToken", authData.accessToken);
-          localStorage.setItem("refreshToken", authData.refreshToken);
+
           const profileData = await UserService.getYourProfile(authData.accessToken);
-          if(profileData.data){
-            localStorage.setItem("role", profileData.data.role?profileData.data.role:"USER");
-          }else{
-            localStorage.setItem("role", "USER");
-          }
+          const userRole = profileData.data && profileData.data.role ? profileData.data.role : "USER";
+          login({
+            accessToken: authData.accessToken,
+            refreshToken: authData.refreshToken,
+            role: userRole,
+          });
           
           toast.success("User logged in Successfully", {
-            position: "top-center",
+            position: "right-bottom",
           });
           navigate("/profile");
-        }
-
-        if (user) {
-          await setDoc(doc(db, "Users", user.uid), {
-            email: user.email,
-            firstName: user.displayName,
-            photo: user.photoURL,
-          });
-          toast.success("User logged in Successfully", {
-            position: "top-center",
-          });
-          navigate("/profile");
+        }else {
+          throw new Error(authData.message || "Login failed");
         }
       })
       .catch((error) => {
         console.error("Error during login:", error);
         toast.error("Login failed. Please try again.", {
-          position: "top-center",
+          position: "right-bottom",
         });
       });
   }

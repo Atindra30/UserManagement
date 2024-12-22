@@ -1,8 +1,10 @@
 import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import UserService from "../service/UserService";
+import { useAuth } from "../../context/AuthContext";
 
 function UserManagementPage() {
+  const { authState } = useAuth();
   const [users, setUsers] = useState([]);
 
   useEffect(() => {
@@ -11,7 +13,7 @@ function UserManagementPage() {
 
   const fetchUsers = async () => {
     try {
-      const token = localStorage.getItem("accessToken");
+      const token = authState.user.accessToken // Retrieve the token from localStorage
       const response = await UserService.getAllUsers(token);
       setUsers(response.data);
     } catch (error) {

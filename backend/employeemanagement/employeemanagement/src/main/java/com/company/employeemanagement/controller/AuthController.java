@@ -42,13 +42,4 @@ public class AuthController {
         return ResponseEntity.ok(authResponse);
     }
 
-
-
-
-
-
-
-
-
-
 }

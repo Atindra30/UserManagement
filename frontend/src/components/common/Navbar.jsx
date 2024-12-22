@@ -3,19 +3,14 @@ import { useAuth } from "../../context/AuthContext";
 import { Link, useNavigate } from "react-router-dom";
 import UserService from "../service/UserService";
 
-
-
 function Navbar() {
   const { authState, logout } = useAuth();
 
   const navigate = useNavigate();
-  const isAuthenticated = UserService.isAuthenticated();
-  const isAdmin = UserService.isAdmin();
 
   const handleLogout = () => {
     if (window.confirm("Are you sure you want to logout?")) {
       logout();
-      UserService.logout();
       navigate("/login");
     }
   };

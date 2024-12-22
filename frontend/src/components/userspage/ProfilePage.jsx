@@ -2,8 +2,11 @@ import React, { useState, useEffect } from "react";
 import UserService from "../service/UserService";
 import { Link } from "react-router-dom";
 import { toast } from "react-toastify";
+import { useAuth } from "../../context/AuthContext";
 
 function ProfilePage() {
+
+  const { authState } = useAuth();
   const [profileInfo, setProfileInfo] = useState({});
 
   useEffect(() => {
@@ -12,7 +15,7 @@ function ProfilePage() {
 
   const fetchProfileInfo = async () => {
     try {
-      const token = localStorage.getItem("accessToken"); // Retrieve the token from localStorage
+      const token = authState.user.accessToken // Retrieve the token from localStorage
       const response = await UserService.getYourProfile(token);
       console.log(response);
       if (response.success) {
